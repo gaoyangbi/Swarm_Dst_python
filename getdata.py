@@ -2,30 +2,34 @@ from viresclient import SwarmRequest
 from datetime import datetime as dt
 
 
+
+
+for year in range(2014,2024):
+
+    for month in range(1,13):
+
+
 # Set up connection with server
-request = SwarmRequest(
-    url="https://vires.services/ows",
-    token="gGHijZm0xmMw5QWGqnPz7wwY9NQt8vod")
+        request = SwarmRequest(
+        url="https://vires.services/ows",
+        token="gGHijZm0xmMw5QWGqnPz7wwY9NQt8vod")
 # Set collection to use
 # - See https://viresclient.readthedocs.io/en/latest/available_parameters.html
-request.set_collection("SW_OPER_MAGC_LR_1B")
+        request.set_collection("SW_OPER_MAGC_LR_1B")
 # Set mix of products to fetch:
 #  measurements (variables from the given collection)
 #  models (magnetic model predictions at spacecraft sampling points)
 #  auxiliaries (variables available with any collection)
 # Optionally set a sampling rate different from the original data
-request.set_products(
-    measurements=[ "B_NEC"],
-    models=["'CHAOS-internal' = 'CHAOS-Core' + 'CHAOS-Static'"],
-    auxiliaries=["QDLat", "QDLon","Dst"],
-    sampling_step="PT1S"
-)
+        request.set_products(
+            measurements=[ "B_NEC"],
+            models=["'CHAOS-internal' = 'CHAOS-Core' + 'CHAOS-Static'"],
+            auxiliaries=["QDLat", "QDLon","Dst"],
+            sampling_step="PT1S"
+            )
 # Fetch data from a given time interval
 # - Specify times as ISO-8601 strings or Python datetime
 
-for year in range(2013,2014):
-
-    for month in range(12,13):
 
         if month == 12:
             start = str(year) + "-" + str(month) + "-01T00:00"
