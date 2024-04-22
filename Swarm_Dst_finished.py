@@ -1,7 +1,6 @@
 globals().clear()
 import cdflib
 import os
-import cdflib.dataclasses
 from matplotlib.dates import YearLocator
 import numpy as np
 import myfunction
@@ -15,10 +14,10 @@ lat_cen        = [-40,-30,-20,20,30,40]  # 单位：度
 belt_width_lon = 360.0
 lon_cen        = [0]
 
-Swarm_dir      = "Swarm_Data/"
-Dst_index      = "Dst_index/index.dat"
-QDday          = "QDday/QDday.txt"
-select_dir     = "Swarm_select/"
+Swarm_dir      = "../Swarm_Data/"
+Dst_index      = "../Dst_index/index.dat"
+QDday          = "../QDday/QDday.txt"
+select_dir     = "../Swarm_select/"
 
 #----------------------读取QDdays文件并保存到相应数据矩阵中
 
@@ -56,7 +55,7 @@ for file_name in files:
     #-----------------------------
 
     raw_data = cdf_file.varget(var.zVariables[0])   #读入数据文件中的所有初始数据
-    for i in var.zVariables[1:]:
+    for i in ['Timestamp', 'Latitude', 'Longitude', 'Radius', 'B_NEC', 'B_NEC_CHAOS-internal', 'Dst', 'QDLat', 'QDLon']:
         data0 = cdf_file.varget(i)
         raw_data = np.column_stack((raw_data,data0))
 
@@ -93,8 +92,6 @@ for file_name in files:
     file_epoch += 1
         
     #---------------------------------------------------save data
-    data_mat_finish = np.delete(data_mat_finish,0,axis=0)
+    data_mat_finish = np.delete(data_mat_finish,0,axis=0)   # 第一行需要删除
     save_file       = select_dir + 'Swarm_data_' + str(year).zfill(4) + str(mon).zfill(2) + '_finishedtest.npy'
     np.save(save_file,data_mat_finish)     
-#-----------------关闭日志
-logger.close()
