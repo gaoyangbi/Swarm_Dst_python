@@ -16,7 +16,7 @@ import torch.utils.data
 #-------------------------定义一个数据格式的类，继承自torch.utils.data.Dataset
 class Dataset_(torch.utils.data.Dataset) :
     def __init__(self, data_df) :   #-----------此处由于父类并没有init，因此不必使用super关键字
-        self.label   = torch.from_numpy(data_df['label'].values)
+        self.label   = torch.from_numpy(data_df['Dst'].values)
         self.data    = torch.from_numpy(data_df[data_df.colums[:-1]].values).to(torch.float32)
 
     # --------复写父类的__getitem__
@@ -54,6 +54,7 @@ class Config_finished() : #-----------------已经划分好训练集，验证集
         batch_size        : int 多少条数据组成一个batch
         learning_rate     : float 学习率
         epoch             : int 学习轮数
+        train_loader, valid_loader, test_loader  : 训练数据、验证数据、测试数据
         """
 
         self.name           = name
@@ -64,17 +65,18 @@ class Config_finished() : #-----------------已经划分好训练集，验证集
         self.batch_size     = batch_size
         self.learning_rate  = learning_rate
         self.epoch          = epoch
+        self.train_loader, self.valid_loader, self.test_loader = self.load_tdt()
 
     #------------------将读取的numpy文件转化为dataframe
     def transform(self, path_name) :
         data_npy   = np.load(path_name)
-        data_npy   = np.delete(data_npy, 0, axis=1)
+        data_npy   = np.delete(data_npy, 0, axis=1)  # 删除了第一行 也就是Spacecraft
         data_npy   = data_npy.astype(np.float32)
         df         = pd.DataFrame(data_npy)
         Config_finished.if_nan(df)
-        df.columns = ['Spacecraft', 'Timestamp', 'Latitude', 'Longitude', 'Radius', 'B_N', 'B_E', 'B_C',
+        df.columns = ['Timestamp', 'Latitude', 'Longitude', 'Radius', 'B_N', 'B_E', 'B_C',
                     'B_N_CHAOS-internal', 'B_E_CHAOS-internal', 'B_C_CHAOS-internal', 'Dst', 'QDLat', 'QDLon']
-        df         = df.reindex(columns=['Spacecraft', 'Timestamp', 'Latitude', 'Longitude', 'Radius', 'B_N', 'B_E', 'B_C',
+        df         = df.reindex(columns=['Timestamp', 'Latitude', 'Longitude', 'Radius', 'B_N', 'B_E', 'B_C',
                     'B_N_CHAOS-internal', 'B_E_CHAOS-internal', 'B_C_CHAOS-internal', 'QDLat', 'QDLon', 'Dst'])
         return df
     
