@@ -17,7 +17,7 @@ import torch.utils.data
 class Dataset_(torch.utils.data.Dataset) :
     def __init__(self, data_df) :   #-----------此处由于父类并没有init，因此不必使用super关键字
         self.label   = torch.from_numpy(data_df['Dst'].values)
-        self.data    = torch.from_numpy(data_df[data_df.colums[:-1]].values).to(torch.float32)
+        self.data    = torch.from_numpy(data_df[data_df.columns[:-1]].values).to(torch.float32)
 
     # --------复写父类的__getitem__
     def __getitem__(self, index) :
