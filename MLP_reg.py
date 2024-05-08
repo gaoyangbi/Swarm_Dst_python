@@ -29,7 +29,7 @@ class MLP(torch.nn.Module) :
 
     #-------------------此处forward函数强烈建议命名为forward，由于魔术方法的存在，会自动调用forward方法，
     #-------------------即object.forward(x) 的作用等于 object(x) 但不建议写object.forward(x)
-    #-------------------因为由于魔术方法的存在，这样写会导致这个方法调用两次，详细机理见收藏的链接
+    #-------------------因为由于魔术方法的存在，这样写会导致这个方法调用两次，详细机理见收藏的链接：PyTorch中的forward的理解
     def forward(self, x) :                       
         in_put = self.input_layer(x)
         hidden = self.hidden_layer(in_put)

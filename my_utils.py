@@ -16,14 +16,14 @@ import torch.utils.data
 #-------------------------定义一个数据格式的类，继承自torch.utils.data.Dataset
 class Dataset_(torch.utils.data.Dataset) :
     def __init__(self, data_df) :   #-----------此处由于父类并没有init，因此不必使用super关键字
-        self.label   = torch.from_numpy(data_df['Dst'].values)
+        self.label   = torch.from_numpy(data_df['Dst'].values).to(torch.float32)
         self.data    = torch.from_numpy(data_df[data_df.columns[:-1]].values).to(torch.float32)
 
     # --------复写父类的__getitem__
     def __getitem__(self, index) :
         batch_data  = self.get_batch_data(index)
         batch_label = self.get_batch_label(index)
-        return batch_data, batch_label 
+        return   batch_data, batch_label        # 此处必须严格按顺序，先特征值，后标签值
 
     def classes(self) :
         return self.label
@@ -32,7 +32,7 @@ class Dataset_(torch.utils.data.Dataset) :
         return self.data.size(0)
     
     def get_batch_label(self,index) :
-        return np.array(self.label[index])
+        return self.label[index]
     
     def get_batch_data(self, index) :
         return self.data[index]
