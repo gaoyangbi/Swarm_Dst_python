@@ -1,5 +1,5 @@
 import torch
-from torch.nn import Linear, ReLU, ModuleList, Sequential, Dropout, Softmax, Tanh
+from torch.nn import Linear, ReLU, ModuleList, Sequential, Dropout, Softmax, Tanh, Sigmoid
 
 #-------------------------对类进行继承和重新定义
 class MLP(torch.nn.Module) :
@@ -12,12 +12,12 @@ class MLP(torch.nn.Module) :
 
         self.input_layer = Sequential(
             Linear(input_n, layer_list[0], bias=False),
-            ReLU()
+            Sigmoid()
         )
         self.hidden_layer = Sequential()
 
         for index in range(num_layer-1) :
-            self.hidden_layer.extend([Linear(layer_list[index], layer_list[index+1], bias=False), ReLU()])
+            self.hidden_layer.extend([Linear(layer_list[index], layer_list[index+1], bias=False), Sigmoid()])
 
         self.dropout = Dropout(dropout)
 
@@ -29,7 +29,7 @@ class MLP(torch.nn.Module) :
 
     #-------------------此处forward函数强烈建议命名为forward，由于魔术方法的存在，会自动调用forward方法，
     #-------------------即object.forward(x) 的作用等于 object(x) 但不建议写object.forward(x)
-    #-------------------因为由于魔术方法的存在，这样写会导致这个方法调用两次，详细机理见收藏的链接：PyTorch中的forward的理解
+    #-------------------因为由于魔术方法的存在，这样写会导致这个方法调用两次，详细机理见收藏的链接
     def forward(self, x) :                       
         in_put = self.input_layer(x)
         hidden = self.hidden_layer(in_put)
